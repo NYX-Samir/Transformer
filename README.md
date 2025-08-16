@@ -71,112 +71,54 @@ Decoder generates target sequence step by step.
 
 Final projection predicts the next token.
 
-classDiagram
-    class InputEmbedding {
-        +d_model
-        +vocab_size
-        +forward(x)
-    }
+flowchart TD
 
-    class PositionEncoding {
-        +d_model
-        +seq_len
-        +dropout
-        +forward(x)
-    }
+    subgraph Step1
+        A[1. Import Libraries]
+    end
 
-    class MultiHeadAttention {
-        +d_model
-        +h
-        +d_k
-        +forward(q, k, v, mask)
-        +attention(query, key, value, mask, dropout)
-    }
+    subgraph Step2
+        B[2. Input Embedding]
+    end
 
-    class LayerNormalization {
-        +eps
-        +alpha
-        +bias
-        +forward(x)
-    }
+    subgraph Step3
+        C[3. Positional Encoding]
+    end
 
-    class FeedForward {
-        +linear_1
-        +linear_2
-        +forward(x)
-    }
+    subgraph Step4
+        D[4. Multi-Head Attention (Self Attention)]
+    end
 
-    class ResidualConnection {
-        +dropout
-        +norm
-        +forward(x, sublayer)
-    }
+    subgraph Step5
+        E[5. Add & Normalize]
+    end
 
-    class EncoderBlock {
-        +self_attention
-        +feed_forward
-        +residualConnection
-        +forward(x, src_mask)
-    }
+    subgraph Step6
+        F[6. Feed Forward]
+    end
 
-    class Encoder {
-        +layers
-        +norm
-        +forward(x, mask)
-    }
+    subgraph Step7
+        G[7. Residual Connection]
+    end
 
-    class DecoderBlock {
-        +self_attention
-        +cross_attention
-        +feed_forward
-        +residualConnection
-        +forward(x, encoder_output, src_mask, tgt_mask)
-    }
+    subgraph Step8
+        H[8. Encoder]
+    end
 
-    class Decoder {
-        +layers
-        +norm
-        +forward(x, encoder_output, src_mask, tgt_mask)
-    }
+    subgraph Step9
+        I[9. Decoder]
+    end
 
-    class ProjectionLayer {
-        +proj
-        +forward(x)
-    }
+    subgraph Step10
+        J[10. Projection Layer]
+    end
 
-    class Transformer {
-        +encoder
-        +decoder
-        +src_embed
-        +tgt_embed
-        +src_pos
-        +tgt_pos
-        +projection_layer
-        +encode(src, src_mask)
-        +decode(tgt, memory, src_mask, tgt_mask)
-        +project(x)
-    }
+    subgraph Step11
+        K[11. Build Transformer]
+    end
 
-    %% Relationships
-    Transformer --> Encoder
-    Transformer --> Decoder
-    Transformer --> InputEmbedding : src_embed
-    Transformer --> InputEmbedding : tgt_embed
-    Transformer --> PositionEncoding : src_pos
-    Transformer --> PositionEncoding : tgt_pos
-    Transformer --> ProjectionLayer
-
-    Encoder --> EncoderBlock
-    EncoderBlock --> MultiHeadAttention
-    EncoderBlock --> FeedForward
-    EncoderBlock --> ResidualConnection
-
-    Decoder --> DecoderBlock
-    DecoderBlock --> MultiHeadAttention : self_attention
-    DecoderBlock --> MultiHeadAttention : cross_attention
-    DecoderBlock --> FeedForward
-    DecoderBlock --> ResidualConnection
-
+    %% Connections
+    A --> B --> C --> D --> E --> F --> G --> H --> I --> J --> K
 
 Key Parameters
 
@@ -189,3 +131,5 @@ h → Number of attention heads (default 8)
 d_ff → Feed-forward hidden size (default 2048)
 
 dropout → Dropout rate (default 0.1)
+
+
