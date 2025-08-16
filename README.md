@@ -71,16 +71,37 @@ dropout → Dropout rate (default 0.1)
 
 ```mermaid
 flowchart TD
-
-    A[1. Import Libraries] --> B[2. Input Embedding]
-    B --> C[3. Positional Encoding]
-    C --> D[4. Multi-Head Attention - Self Attention]
-    D --> E[5. Add & Normalize]
-    E --> F[6. Feed Forward]
-    F --> G[7. Residual Connection]
-    G --> H[8. Encoder]
-    H --> I[9. Decoder]
-    I --> J[10. Projection Layer]
-    J --> K[11. Build Transformer]
+    %% Input and Embedding
+    A[Import Libraries] --> B[Input Sequence]
+    B --> C[Input Embedding]
+    C --> D[Positional Encoding]
+    
+    %% Encoder Stack
+    subgraph Encoder["Encoder Stack (x N layers)"]
+        D --> E1[Multi-Head Self-Attention]
+        E1 --> E2[Add & Norm]
+        E2 --> E3[Feed Forward Network]
+        E3 --> E4[Add & Norm]
+    end
+    E4 --> F[Encoder Output]
+    
+    %% Decoder Stack
+    subgraph Decoder["Decoder Stack (x N layers)"]
+        G[Target Sequence] --> H[Output Embedding]
+        H --> I[Positional Encoding]
+        I --> J1[Masked Multi-Head Self-Attention]
+        J1 --> J2[Add & Norm]
+        J2 --> J3[Encoder-Decoder Attention]
+        F --> J3
+        J3 --> J4[Add & Norm]
+        J4 --> J5[Feed Forward Network]
+        J5 --> J6[Add & Norm]
+    end
+    J6 --> K[Decoder Output]
+    
+    %% Final Output
+    K --> L[Linear Projection]
+    L --> M[Softmax]
+    M --> N[Output Probabilities]
 
 
